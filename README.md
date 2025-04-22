@@ -1,3 +1,3 @@
-SMS API
-modelul de AI
-si sa fac pretty aplicatia
+*SMS API
+*modelul de AI
+*si sa fac pretty aplicatia
