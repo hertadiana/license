@@ -1,0 +1,84 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: hidden;
+    padding: 20px;
+  }
+  
+  .modal-content {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh; /* limits height so it doesn't overflow viewport */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .modal-content h2 {
+    text-align: center;
+    margin: 0;
+    padding: 20px 16px;
+    font-size: 24px;
+    border-bottom: 1px solid #eee;
+    background: #f9f9f9;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-scroll-container {
+    padding: 20px 16px;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+  
+  /* Input and label styling remains the same */
+  
+  button {
+    margin-top: 10px;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  button.close-btn {
+    background-color: #f44336;
+    margin-top: 0;
+  }
+  
+  button.close-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Footer buttons stay visible */
+  .modal-footer {
+    padding: 16px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: #f9f9f9;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
