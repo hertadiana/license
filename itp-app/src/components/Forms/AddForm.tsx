@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import {
+  isNonEmpty,
+  isPositiveNumber,
+  isValidEmail
+} from '../utils/validation';
 import './AddForm.css'; // Import the CSS file
-
 interface AddFormProps {
   onClose: () => void;
   onAddCar: (newCar: any) => void;
@@ -64,6 +68,20 @@ const AddForm: React.FC<AddFormProps> = ({ onClose, onAddCar }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    if (
+      !isPositiveNumber(age) ||
+      !isNonEmpty(name) ||
+      !isValidEmail(email) ||
+      !isNonEmpty(type) ||
+      !isNonEmpty(last) ||
+      !isNonEmpty(next) ||
+      !isNonEmpty(phone)
+    ) {
+      alert("Please fill all fields correctly:\n- Plate format: ABC123DE\n- Age must be > 0\n- Valid email");
+      return;
+    }
+  
     const newCar = {
       plate,
       age: parseInt(age),
@@ -74,22 +92,21 @@ const AddForm: React.FC<AddFormProps> = ({ onClose, onAddCar }) => {
       phone,
       email,
     };
-    
+  
     try {
       const response = await fetch('http://localhost:3000/cars', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newCar),
       });
       const data = await response.json();
-      onAddCar(data); // Add the new car to the table
-      onClose(); // Close the form
+      onAddCar(data);
+      onClose();
     } catch (error) {
       console.error('Error adding car:', error);
     }
   };
+  
 
   return (
     <div className="modal-overlay">
@@ -98,35 +115,90 @@ const AddForm: React.FC<AddFormProps> = ({ onClose, onAddCar }) => {
 
         <div className="form-scroll-container">
           <form onSubmit={handleSubmit}>
-            <label>Plate:
-              <input type="text" value={plate} onChange={(e) => setPlate(e.target.value)} required />
-            </label>
-            <label>Age:
-              <input type="number" value={age} onChange={(e) => setAge(e.target.value)} required />
-            </label>
-            <label>Type:
-              <input type="text" value={type} onChange={(e) => setType(e.target.value)} required />
-            </label>
-            <label>Last Inspection:
-              <input
-                type="date"
-                value={last}
-                onChange={(e) => setLast(e.target.value)}
-                required
-              />
-            </label>
-            <label>Next Inspection:
-              <input type="date" value={next} onChange={(e) => setNext(e.target.value)} required disabled />
-            </label>
-            <label>Owner Name:
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-            </label>
-            <label>Phone:
-              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-            </label>
-            <label>Email:
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </label>
+          <label>Plate:
+  <input
+    type="text"
+    value={plate}
+    onChange={(e) => setPlate(e.target.value.toUpperCase())}
+    pattern="^[A-Z]{1,2}\s\d{2,3}\s[A-Z]{1,2}$"
+    title="Format: AB 123 CD"
+    required
+  />
+</label>
+
+<label>Age:
+  <input
+    type="number"
+    min="1"
+    value={age}
+    onChange={(e) => setAge(e.target.value)}
+    required
+  />
+</label>
+
+<label>Owner Name:
+  <input
+    type="text"
+    value={name}
+    onChange={(e) => setName(e.target.value)}
+    pattern="^[a-zA-Z\s]+$"
+    title="Only letters and spaces allowed"
+    required
+  />
+</label>
+<label>Phone:
+  <input
+    type="tel"
+    value={phone}
+    onChange={(e) => setPhone(e.target.value)}
+    pattern="\d{10}"
+    title="Enter a valid phone number (10 digits)"
+    required
+  />
+</label>
+
+<label>Car Type:
+  <select value={type} onChange={(e) => setType(e.target.value)} required>
+    <option value="">Select type</option>
+    <option value="autoturism">Autoturism</option>
+    <option value="utilitarUsor">Utilitar Ușor</option>
+    <option value="utilitarGreu">Utilitar Greu</option>
+    <option value="transportPersoane">Transport Persoane</option>
+    <option value="motociclete">Motocicletă</option>
+    <option value="remorcaUsoara">Remorcă Ușoară</option>
+    <option value="remorcaGrea">Remorcă Grea</option>
+    <option value="taxi">Taxi</option>
+  </select>
+</label>
+
+<label>Last Inspection Date:
+  <input
+    type="date"
+    value={last}
+    onChange={(e) => setLast(e.target.value)}
+    required
+  />
+</label>
+
+<label>Next Inspection Date:
+  <input
+    type="date"
+    value={next}
+    readOnly
+  />
+</label>
+
+<label>Email:
+  <input
+    type="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
+    title="Email must be in format example@domain.com"
+    required
+  />
+</label>
+
           </form>
         </div>
 

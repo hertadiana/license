@@ -1,33 +1,32 @@
-// src/components/CarTable.tsx
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Car } from './Car';
-import './CarTable.css'; // Import the CSS file
+import './CarTable.css';
 import AddForm from './Forms/AddForm';
 import TodaysAdd from './Forms/TodaysAdd';
+
 const CarTable: React.FC = () => {
-  const [cars, setCars] = useState<Car[]>([]);
+  const [cars, setCars] = useState<Car[]>([]); 
   const [selectedCars, setSelectedCars] = useState<Set<number>>(new Set());
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [carToEdit, setCarToEdit] = useState<Car | null>(null);
   const [showTodays, setShowTodays] = useState(false);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [carsPerPage] = useState(5);
+  const [totalCars, setTotalCars] = useState(0);
+
   const navigate = useNavigate();
 
-  // Fetch cars from backend
-  const fetchCars = async () => {
+  const fetchCars = async (page = 1) => {
     try {
-      const response = await fetch('http://localhost:3000/cars');
+      const response = await fetch(`http://localhost:3000/cars?page=${page}&limit=${carsPerPage}`);
       const data = await response.json();
-      setCars(data);
+      setCars(data.cars);
+      setTotalCars(data.total);
     } catch (error) {
       console.error('Error fetching cars:', error);
     }
   };
 
-  // Handle selection of cars
   const toggleSelection = (id: number) => {
     setSelectedCars((prevSelected) => {
       const updatedSelected = new Set(prevSelected);
@@ -40,7 +39,6 @@ const CarTable: React.FC = () => {
     });
   };
 
-  // Delete selected cars
   const deleteSelectedCars = async () => {
     try {
       for (let carId of selectedCars) {
@@ -48,70 +46,60 @@ const CarTable: React.FC = () => {
           method: 'DELETE',
         });
       }
-      // Remove the deleted cars from the state
-      setCars(cars.filter((car) => !selectedCars.has(car.id)));
-      setSelectedCars(new Set()); // Clear the selection
+      fetchCars(currentPage);
+      setSelectedCars(new Set());
     } catch (error) {
       console.error('Error deleting selected cars:', error);
     }
   };
 
-  // Function to add a new car to the table
   const addCar = (newCar: Car) => {
     setCars((prevCars) => [...prevCars, newCar]);
+    setTotalCars((prev) => prev + 1);
   };
+
   const deleteCar = async (id: number) => {
     try {
       await fetch(`http://localhost:3000/cars/${id}`, {
         method: 'DELETE',
       });
-      // Remove the deleted car from the state
-      setCars(cars.filter((car) => car.id !== id));
+      fetchCars(currentPage);
+      setSelectedCars((prevSelected) => {
+        const updatedSelected = new Set(prevSelected);
+        updatedSelected.delete(id);
+        return updatedSelected;
+      });
     } catch (error) {
       console.error('Error deleting car:', error);
     }
   };
+
   useEffect(() => {
-    fetchCars();
-  }, []);
-  
+    fetchCars(currentPage);
+  }, [currentPage]);
+
+  const totalPages = Math.ceil(totalCars / carsPerPage);
+
   return (
     <div className="car-table-container">
-      <h1 className="table-heading">Car Table</h1>
-      <button
-  className="settings-btn"
-  onClick={() => navigate(`/settings`)}
->
-  Settings
-</button>
-      <button
-        className="add-btn"
-        onClick={() => setIsAddFormOpen(true)}
-      >
-        Add Car
-      </button>
+      <h1 className="table-heading">ITP Solutions</h1>
 
-      {isAddFormOpen && (
-        <AddForm onClose={() => setIsAddFormOpen(false)} onAddCar={addCar} />
-      )}
-
-      <button
-        className="delete-btn"
-        onClick={deleteSelectedCars}
-        disabled={selectedCars.size === 0}
-      >
+      <button className="add-btn" onClick={() => setIsAddFormOpen(true)}>Add Car</button>
+      {isAddFormOpen && <AddForm onClose={() => setIsAddFormOpen(false)} onAddCar={addCar} />}
+      <button className="delete-btn" onClick={deleteSelectedCars} disabled={selectedCars.size === 0}>
         Delete Selected
       </button>
-      {showTodays && (
-  <TodaysAdd
-    cars={cars}
-    onClose={() => setShowTodays(false)}
-  />
-)}
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-  <button onClick={() => setShowTodays(true)}>Today's Additions</button>
+      {showTodays && <TodaysAdd cars={cars} onClose={() => setShowTodays(false)} />}
+<div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px', gap: '10px' }}>
+  <button onClick={() => setShowTodays(true)} className="todays-add-btn">
+    Today's Add
+  </button>
+  <button className="settings-btn" onClick={() => navigate(`/settings`)}>
+    Settings
+  </button>
 </div>
+
 
       <table className="car-table">
         <thead>
@@ -159,31 +147,31 @@ const CarTable: React.FC = () => {
               <td>{car.phone}</td>
               <td>{car.email}</td>
               <td>
-              <button
-  className="edit-btn"
-  onClick={() => navigate(`/edit/${car.id}`)}
->
-  Edit
-</button>
-  <button
-    className="delete-btn"
-    onClick={() => {
-      deleteCar(car.id);
-      setSelectedCars((prevSelected) => {
-        const updatedSelected = new Set(prevSelected);
-        updatedSelected.delete(car.id);
-        return updatedSelected;
-      });
-    }}
-  >
-    Delete
-  </button>
-</td>
-
+                <div className="button-container">
+                  <button className="edit-btn" onClick={() => navigate(`/edit/${car.id}`)}>
+                    Edit
+                  </button>
+                  <button className="delete-btn" onClick={() => deleteCar(car.id)}>
+                    Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div className="pagination">
+        <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
+          Previous
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };

@@ -33,10 +33,29 @@ sequelize.sync();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
 app.get('/cars', async (req, res) => {
-    const cars = await Car.findAll();
-    res.json(cars);
-  });
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await Car.findAndCountAll({
+      limit,
+      offset,
+      order: [['id', 'ASC']], // optional: you can sort however you want
+    });
+
+    res.json({
+      cars: rows,
+      total: count,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/cars/:id', async (req, res) => {
     const car = await Car.findByPk(req.params.id);
     res.json(car);

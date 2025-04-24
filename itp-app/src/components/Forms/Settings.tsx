@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, } from "react";
+import { useNavigate } from "react-router-dom";
 export default function Settings() {
   const defaultIntervals = {
     autoturism: { under3: 3, between3and12: 2, over12: 1 },
@@ -13,19 +13,22 @@ export default function Settings() {
   };
 
   const [intervals, setIntervals] = useState(defaultIntervals);
+  const navigate = useNavigate();
 
   // Load saved settings on first render
   useEffect(() => {
     const saved = localStorage.getItem("intervalSettings");
     if (saved) {
       try {
-        setIntervals(JSON.parse(saved));
+        const parsedSettings = JSON.parse(saved);
+        setIntervals(parsedSettings);
       } catch (e) {
         console.error("Failed to parse saved settings:", e);
+        alert("Error loading settings. Defaults will be used.");
       }
     }
   }, []);
-
+  
   const handleSave = () => {
     localStorage.setItem("intervalSettings", JSON.stringify(intervals));
     alert("Settings saved!");
@@ -53,6 +56,8 @@ export default function Settings() {
       {/* Add similar blocks for other types if you want them editable */}
 
       <button onClick={handleSave}>Salvează</button>
+      <button type="button" onClick={() => navigate('/')}>Cancel</button>
+
     </div>
   );
 }

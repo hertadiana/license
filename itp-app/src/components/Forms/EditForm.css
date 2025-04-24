@@ -1,0 +1,95 @@
+/* EditForm container */
+.edit-form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Input group styling */
+  .input-group {
+    position: relative;
+    margin-bottom: 25px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    color: #333;
+    transition: all 0.3s ease;
+  }
+  
+  .input-group input:focus {
+    border-color: #0056b3;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.2);
+  }
+  
+  .input-group label {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 0.9rem;
+    color: #888;
+    transition: all 0.3s ease;
+  }
+  
+  /* Floating label effect */
+  .input-group input:focus + label,
+  .input-group input:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 20px;
+    font-size: 0.8rem;
+    color: #0056b3;
+  }
+  
+  /* Action buttons */
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 48%;
+  }
+  
+  .save-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+  }
+  
+  .save-btn:hover {
+    background-color: #218838;
+  }
+  
+  .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #c82333;
+  }
+  

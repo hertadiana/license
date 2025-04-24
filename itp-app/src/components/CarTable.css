@@ -1,87 +1,233 @@
-/* src/components/CarTable.css */
+.car-table-container {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 85%; /* Increase the width of the table container */
+  margin-top: 1rem;
+  text-align: center;
+}
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.table-heading {
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
+.car-table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  table-layout: fixed; /* Ensures that the table cells are distributed evenly */
+}
+
+.car-table th,
+.car-table td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.car-table thead {
+  background-color: #f5f5f5;
+}
+
+.car-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.car-table tr:hover {
+  background-color: #f0f8ff;
+}
+
+.car-table th {
+  color: #333;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Make the toggle column narrower */
+.car-table th:first-child,
+.car-table td:first-child {
+  width: 50px; /* Adjust to your preference */
+  text-align: center;
+}
+
+/* Button Styles */
+.add-btn,
+.delete-btn,
+.todays-add-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.settings-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  position: relative;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Space between buttons */
+  padding-left: 10px; /* Adds space from the left */
+}
+
+.todays-add-btn {
+  margin-top: 10px;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Align Edit and Delete buttons properly */
+.car-table td .button-container {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px; /* Adds space between buttons */
+}
+
+.car-table td .edit-btn,
+.car-table td .delete-btn {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  background-color: #28a745; /* Edit button green */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.car-table td .delete-btn {
+  background-color: #dc3545; /* Delete button red */
+}
+
+/* Optional: Add hover effect for buttons */
+.car-table td .edit-btn:hover {
+  background-color: #218838;
+}
+
+.car-table td .delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Adjust column widths for better spacing */
+.car-table th:nth-child(1),
+.car-table td:nth-child(1) {
+  width: 50px; /* Narrow checkbox column */
+}
+
+.car-table th:nth-child(2),
+.car-table td:nth-child(2) {
+  width: 150px; /* Plate column */
+}
+
+.car-table th:nth-child(3),
+.car-table td:nth-child(3) {
+  width: 80px; /* Age column */
+}
+
+.car-table th:nth-child(4),
+.car-table td:nth-child(4) {
+  width: 120px; /* Type column */
+}
+
+.car-table th:nth-child(5),
+.car-table td:nth-child(5) {
+  width: 150px; /* Last Inspection column */
+}
+
+.car-table th:nth-child(6),
+.car-table td:nth-child(6) {
+  width: 150px; /* Next Inspection column */
+}
+
+.car-table th:nth-child(7),
+.car-table td:nth-child(7) {
+  width: 150px; /* Owner Name column */
+}
+
+.car-table th:nth-child(8),
+.car-table td:nth-child(8) {
+  width: 120px; /* Phone column */
+}
+
+.car-table th:nth-child(9),
+.car-table td:nth-child(9) {
+  width: 180px; /* Email column */
+}
+
+/* Adjust Actions column width */
+.car-table th:nth-child(10),
+.car-table td:nth-child(10) {
+  width: 120px; /* Actions column width */
+}
+/* Adjust button container width */
+.car-table td .button-container {
+  display: flex;
+  justify-content: space-between; /* Space out the buttons */
+  gap: 10px;
+  padding-left: 10px;
+  width: 100%; /* Ensure it takes full width of the cell */
+}
+@media (max-width: 768px) {
+  .car-table {
+    width: 100%; /* Make table take full width on smaller screens */
   }
-  
-  .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .car-table th, .car-table td {
+    padding: 8px; /* Reduce padding for smaller screens */
   }
-  
-  .modal-content h2 {
-    margin-bottom: 20px;
+
+  .car-table td .button-container {
+    gap: 5px; /* Reduce gap between buttons */
   }
-  
-  .modal-content input {
+
+  /* Optionally, stack the columns on small screens */
+  .car-table td {
+    display: block;
     width: 100%;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
   }
-  
-  .modal-content button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+
+  .car-table th {
+    display: none; /* Hide headers */
   }
-  
-  .modal-content button:hover {
-    background-color: #45a049;
-  }
-  
-  .add-btn {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .delete-btn {
-    padding: 10px 15px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .delete-btn:hover {
-    background-color: #c82333;
-  }
-  .edit-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    margin-right: 5px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 0.9rem;
-  }
-  
-  .edit-btn:hover {
-    background-color: #45a049;
-  }
-  
+  /* Example of further improvement in CSS */
+.todays-add-btn,
+.settings-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.settings-btn {
+  background-color: #28a745; /* Change color to differentiate buttons */
+}
+
+.todays-add-btn:hover,
+.settings-btn:hover {
+  opacity: 0.8;
+}
+
+}
