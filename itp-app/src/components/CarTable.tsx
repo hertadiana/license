@@ -4,6 +4,7 @@ import { Car } from './Car';
 import './CarTable.css';
 import AddForm from './Forms/AddForm';
 import TodaysAdd from './Forms/TodaysAdd';
+import Uploader from './Forms/Uploader';
 
 const CarTable: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]); 
@@ -13,19 +14,25 @@ const CarTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [carsPerPage] = useState(5);
   const [totalCars, setTotalCars] = useState(0);
+const [defaultFormValues, setDefaultFormValues] = useState<{ plate: string; last: string } | undefined>(undefined);
+const [searchQuery, setSearchQuery] = useState('');
+
 
   const navigate = useNavigate();
 
-  const fetchCars = async (page = 1) => {
-    try {
-      const response = await fetch(`http://localhost:3000/cars?page=${page}&limit=${carsPerPage}`);
-      const data = await response.json();
-      setCars(data.cars);
-      setTotalCars(data.total);
-    } catch (error) {
-      console.error('Error fetching cars:', error);
-    }
-  };
+  const fetchCars = async (page = 1, search = '') => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/cars?page=${page}&limit=${carsPerPage}&search=${encodeURIComponent(search)}`
+    );
+    const data = await response.json();
+    setCars(data.cars);
+    setTotalCars(data.total);
+  } catch (error) {
+    console.error('Error fetching cars:', error);
+  }
+};
+
 
   const toggleSelection = (id: number) => {
     setSelectedCars((prevSelected) => {
@@ -75,8 +82,9 @@ const CarTable: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchCars(currentPage);
-  }, [currentPage]);
+  fetchCars(currentPage, searchQuery);
+}, [currentPage, searchQuery]);
+
 
   const totalPages = Math.ceil(totalCars / carsPerPage);
 
@@ -85,11 +93,24 @@ const CarTable: React.FC = () => {
       <h1 className="table-heading">ITP Solutions</h1>
 
       <button className="add-btn" onClick={() => setIsAddFormOpen(true)}>Add Car</button>
-      {isAddFormOpen && <AddForm onClose={() => setIsAddFormOpen(false)} onAddCar={addCar} />}
+      {isAddFormOpen && (
+  <AddForm
+    onClose={() => {
+      setIsAddFormOpen(false);
+setDefaultFormValues(undefined);
+    }}
+    onAddCar={addCar}
+    defaultValues={defaultFormValues}
+  />
+)}
+
       <button className="delete-btn" onClick={deleteSelectedCars} disabled={selectedCars.size === 0}>
         Delete Selected
       </button>
-
+<Uploader onFileParsed={(plate, last) => {
+  setDefaultFormValues({ plate, last });
+  setIsAddFormOpen(true);
+}} />
       {showTodays && <TodaysAdd cars={cars} onClose={() => setShowTodays(false)} />}
 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px', gap: '10px' }}>
   <button onClick={() => setShowTodays(true)} className="todays-add-btn">
@@ -100,6 +121,18 @@ const CarTable: React.FC = () => {
   </button>
 </div>
 
+<div style={{ marginBottom: '10px' }}>
+  <input
+    type="text"
+    placeholder="Search by plate, name, phone..."
+    value={searchQuery}
+    onChange={(e) => {
+      setSearchQuery(e.target.value);
+      setCurrentPage(1); // reset to first page when searching
+    }}
+    style={{ padding: '6px', width: '300px' }}
+  />
+</div>
 
       <table className="car-table">
         <thead>

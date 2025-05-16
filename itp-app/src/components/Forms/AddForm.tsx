@@ -8,7 +8,12 @@ import './AddForm.css'; // Import the CSS file
 interface AddFormProps {
   onClose: () => void;
   onAddCar: (newCar: any) => void;
+  defaultValues?: {
+    plate: string;
+    last: string;
+  };
 }
+
 
 // Helper function to calculate the next inspection date
 function calculateNextInspection(lastDate: string, car: { type: string; age: number }) {
@@ -48,7 +53,7 @@ function calculateNextInspection(lastDate: string, car: { type: string; age: num
   return result.toISOString().split("T")[0]; // format as YYYY-MM-DD
 }
 
-const AddForm: React.FC<AddFormProps> = ({ onClose, onAddCar }) => {
+const AddForm: React.FC<AddFormProps> = ({ onClose, onAddCar, defaultValues }) => {
   const [plate, setPlate] = useState('');
   const [age, setAge] = useState('');
   const [type, setType] = useState('');
@@ -59,13 +64,23 @@ const AddForm: React.FC<AddFormProps> = ({ onClose, onAddCar }) => {
   const [email, setEmail] = useState('');
 
   // Recalculate the next inspection date when the last inspection date, type, or age is updated
-  useEffect(() => {
-    if (last && type && age !== '') {
-      const nextDate = calculateNextInspection(last, { type, age: parseInt(age) });
-      setNext(nextDate);
-    }
-  }, [last, type, age]); // Depend on last, type, and age
+useEffect(() => {
+  // Step 1: Prefill plate and last only once when defaultValues are received
+  if (defaultValues) {
+    setPlate((prev) => prev || defaultValues.plate); // don't overwrite if already typed
+    setLast((prev) => prev || defaultValues.last);   // same for last
+  }
+}, [defaultValues]);
 
+// Step 2: Always recalculate next inspection date if dependencies change
+useEffect(() => {
+  if (last && type && age !== '') {
+    const nextDate = calculateNextInspection(last, { type, age: parseInt(age) });
+    setNext(nextDate);
+  }
+}, [last, type, age]);
+
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   

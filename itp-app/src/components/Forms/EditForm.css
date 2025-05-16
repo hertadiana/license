@@ -93,3 +93,8 @@
     background-color: #c82333;
   }
   
+  .drop-box{
+  border:2px dashed #888; padding:20px; border-radius:12px;
+  text-align:center; cursor:pointer; transition:.2s;
+}
+.drop-box.active{ background:#fafafa; }
