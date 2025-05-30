@@ -11,18 +11,28 @@ export default function Uploader({ onFileParsed }: Props) {
 
     const file = files[0];
 
-    // Extract plate from filename (e.g., "B123XYZ.jpg" -> "B 123 XYZ")
-    const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
-    const formattedPlate = nameWithoutExtension
-      .replace(/(\D{1,2})(\d{2,3})(\D{1,2})/, "$1 $2 $3")
-      .toUpperCase();
+    const formData = new FormData();
+    formData.append("image", file);
 
-    // Extract file date (fallback to current date)
-    const fileDate = file.lastModified
-      ? new Date(file.lastModified).toISOString().split("T")[0]
-      : new Date().toISOString().split("T")[0];
+    fetch("http://localhost:5000/predict", {
+      method: "POST",
+      body: formData
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const error = await res.json();
+          throw new Error(error.error || "Prediction failed");
+        }
+        return res.json();
+      })
+      .then(data => {
+        onFileParsed(data.plate, data.date);
+      })
+      .catch(err => {
+        alert(`Error: ${err.message}`);
+        console.error(err);
+      });
 
-    onFileParsed(formattedPlate, fileDate);
   }, [onFileParsed]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

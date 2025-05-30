@@ -1,0 +1,10 @@
+flask
+flask-cors
+easyocr
+numpy
+opencv-python-headless
+Pillow
+torch
+transformers
+pillow
+yolov5 @ git+https://github.com/ultralytics/yolov5.git
