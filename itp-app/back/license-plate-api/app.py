@@ -43,8 +43,16 @@ def predict():
 
     try:
         file = request.files['image']
-        im = Image.open(file.stream).convert('RGB')
+        file_last_modified_str = request.form.get('fileLastModified')
 
+        im = Image.open(file.stream).convert('RGB')
+        if file_last_modified_str:
+            # parse the ISO string into a date object
+            file_date = datetime.fromisoformat(file_last_modified_str).date().isoformat()
+        else:
+            file_date = None  # fallback if no date sent
+
+        im = Image.open(file.stream).convert('RGB')
         # YOLOv8 detection
         results = model_yolo.predict(source=im, imgsz=640)
         predictions = results[0].boxes.data  # tensor: [x1, y1, x2, y2, conf, class]
@@ -70,7 +78,7 @@ def predict():
 
         return jsonify({
             'plate': formatted,
-            'date': datetime.today().strftime('%Y-%m-%d')
+            'date': file_date
         })
 
     except Exception as e:

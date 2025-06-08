@@ -89,10 +89,118 @@ const [searchQuery, setSearchQuery] = useState('');
   const totalPages = Math.ceil(totalCars / carsPerPage);
 
   return (
-    <div className="car-table-container">
-      <h1 className="table-heading">ITP Solutions</h1>
+    <> {/* Using a React Fragment because we have two top-level elements */}
+      {showTodays && <TodaysAdd cars={cars} onClose={() => setShowTodays(false)} />}
 
-      <button className="add-btn" onClick={() => setIsAddFormOpen(true)}>Add Car</button>
+      {/* This div wraps only the table and will be centered on the page */}
+      <div className="page-content-wrapper">
+        {/* Table Section */}
+        <div className="car-table-container">
+          <h1 className="table-heading">ITP Solutions</h1>
+
+          <div className="search-bar-container">
+            <input
+              type="text"
+              className="search-bar"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1); // reset to first page when searching
+              }}
+            />
+          </div>
+
+          <table className="car-table">
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={selectedCars.size === cars.length}
+                    onChange={() => {
+                      if (selectedCars.size === cars.length) {
+                        setSelectedCars(new Set());
+                      } else {
+                        setSelectedCars(new Set(cars.map((car) => car.id)));
+                      }
+                    }}
+                  />
+                </th>
+                <th>Plate</th>
+                <th>Age</th>
+                <th>Type</th>
+                {/* <th>Last Inspection</th> */}
+                <th>Next Inspection</th>
+                <th>Owner Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cars.length === 0 ? (
+                <tr className="empty-row">
+                  <td colSpan={9} style={{ textAlign: 'center', color: '#666', fontStyle: 'italic' }}>
+                    No matching results found.
+                  </td>
+                </tr>
+              ) : (
+                cars.map((car) => (
+                  <tr key={car.id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedCars.has(car.id)}
+                        onChange={() => toggleSelection(car.id)}
+                      />
+                    </td>
+                    <td>{car.plate}</td>
+                    <td>{car.age}</td>
+                    <td>{car.type}</td>
+                    {/* <td>{car.last}</td> */}
+                    <td>{car.next}</td>
+                    <td>{car.name}</td>
+                    <td className="email-cell">{car.phone}</td>
+                    <td>{car.email}</td>
+                    <td>
+                      <div className="button-container">
+                        <button className="edit-btn" onClick={() => navigate(`/edit/${car.id}`)}>
+                          Edit
+                        </button>
+                        <button className="delete-btn" onClick={() => deleteCar(car.id)}>
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+
+            </tbody>
+          </table>
+
+          <div className="pagination">
+            <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
+              Previous
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>
+              Next
+            </button>
+          </div>
+        </div>
+      </div> {/* End of page-content-wrapper */}
+
+      {/* Button Group - This div is fixed and positioned independently */}
+      <div className="button-group-container">
+        <button onClick={() => setShowTodays(true)} className="todays-add-btn">
+          Today's Add
+        </button>
+        <button className="settings-btn" onClick={() => navigate('/settings')}>
+          Settings
+        </button>
+        <button className="add-btn" onClick={() => setIsAddFormOpen(true)}>Add Car</button>
       {isAddFormOpen && (
   <AddForm
     onClose={() => {
@@ -103,109 +211,17 @@ setDefaultFormValues(undefined);
     defaultValues={defaultFormValues}
   />
 )}
-
-      <button className="delete-btn" onClick={deleteSelectedCars} disabled={selectedCars.size === 0}>
-        Delete Selected
-      </button>
-<Uploader onFileParsed={(plate, last) => {
-  setDefaultFormValues({ plate, last });
-  setIsAddFormOpen(true);
-}} />
-      {showTodays && <TodaysAdd cars={cars} onClose={() => setShowTodays(false)} />}
-<div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px', gap: '10px' }}>
-  <button onClick={() => setShowTodays(true)} className="todays-add-btn">
-    Today's Add
-  </button>
-  <button className="settings-btn" onClick={() => navigate(`/settings`)}>
-    Settings
-  </button>
-</div>
-
-<div style={{ marginBottom: '10px' }}>
-  <input
-    type="text"
-    placeholder="Search by plate, name, phone..."
-    value={searchQuery}
-    onChange={(e) => {
-      setSearchQuery(e.target.value);
-      setCurrentPage(1); // reset to first page when searching
-    }}
-    style={{ padding: '6px', width: '300px' }}
-  />
-</div>
-
-      <table className="car-table">
-        <thead>
-          <tr>
-            <th>
-              <input
-                type="checkbox"
-                checked={selectedCars.size === cars.length}
-                onChange={() => {
-                  if (selectedCars.size === cars.length) {
-                    setSelectedCars(new Set());
-                  } else {
-                    setSelectedCars(new Set(cars.map((car) => car.id)));
-                  }
-                }}
-              />
-            </th>
-            <th>Plate</th>
-            <th>Age</th>
-            <th>Type</th>
-            <th>Last Inspection</th>
-            <th>Next Inspection</th>
-            <th>Owner Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cars.map((car) => (
-            <tr key={car.id}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedCars.has(car.id)}
-                  onChange={() => toggleSelection(car.id)}
-                />
-              </td>
-              <td>{car.plate}</td>
-              <td>{car.age}</td>
-              <td>{car.type}</td>
-              <td>{car.last}</td>
-              <td>{car.next}</td>
-              <td>{car.name}</td>
-              <td>{car.phone}</td>
-              <td>{car.email}</td>
-              <td>
-                <div className="button-container">
-                  <button className="edit-btn" onClick={() => navigate(`/edit/${car.id}`)}>
-                    Edit
-                  </button>
-                  <button className="delete-btn" onClick={() => deleteCar(car.id)}>
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className="pagination">
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
-          Previous
+        <button className="delete-btn" onClick={deleteSelectedCars} disabled={selectedCars.size === 0}>
+          Delete Selected
         </button>
-        <span style={{ margin: '0 10px' }}>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage((p) => p + 1)}>
-          Next
-        </button>
+        <Uploader
+          onFileParsed={(plate, last) => {
+            setDefaultFormValues({ plate, last });
+            setIsAddFormOpen(true);
+          }}
+        />
       </div>
-    </div>
+    </>
   );
 };
 

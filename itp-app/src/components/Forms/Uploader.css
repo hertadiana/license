@@ -1,0 +1,9 @@
+/* Uploader.css */
+
+
+.upload-icon {
+  width: 200px;   /* or smaller, like 24px or 16px */
+  height: 200px;
+  margin-bottom: 8px; /* spacing between image and text */
+}
+/* Keep the rest of your Uploader.css and other CSS/JSX files the same. */

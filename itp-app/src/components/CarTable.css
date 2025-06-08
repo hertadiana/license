@@ -1,233 +1,222 @@
+/* CarTable.css */
+
+/* General body styling for full page layout */
+html, body, #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+
+    /* Remove or comment out this line */
+    /* background-color: #4583c5; */
+
+    /* ✅ Set background image */
+    background-image: url('/image.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+
+/* This wrapper will contain only the table and be centered */
+.page-content-wrapper {
+    display: flex; /* Makes the table container a flex item for centering */
+    justify-content: center; /* Centers the table container horizontally */
+    width: 100%; /* Allow it to take full width of its parent */
+    /* Add padding-right to create space for the fixed button div
+       Calculated as: button_min_width (180px) + button_padding_sides (2*15px=30px) + desired_gap (30px)
+       180 + 30 + 30 = 240px */
+    padding-right: 240px;
+    box-sizing: border-box; /* Include padding in the element's total width */
+    margin: 30px auto; /* Centers the wrapper itself vertically and provides top margin */
+    /* If the table's max-width (1000px) is your target, this wrapper doesn't need its own max-width
+       unless you want to explicitly cap the overall content area. */
+}
+
+/* Container for the table section */
 .car-table-container {
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  width: 85%; /* Increase the width of the table container */
-  margin-top: 1rem;
-  text-align: center;
+    padding: 25px 20px;
+    max-width: 1000px; /* Limits the table's width */
+    width: 100%; /* Allows it to shrink if needed (e.g., on smaller screens) */
+    background-color: #f9fafb;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0; /* Prevent it from shrinking too much */
 }
 
+/* Button Group (Fixed position, adjusted for centering with the table) */
+.button-group-container {
+    position: fixed; /* Make it fixed relative to the viewport */
+    top: 60px; /* Adjust this to match the top position of your table for alignment */
+    /* Calculate left position to place it relative to the centered table:
+       50vw (center of viewport)
+       - (max-width of table / 2)  --> moves it to the left edge of the centered table
+       + max-width of table       --> moves it to the right edge of the centered table
+       + desired_gap              --> adds the gap to the right of the table
+    */
+    /* Let's simplify the calc based on the original layout */
+    /* The center of the page is 50vw. The table max-width is 1000px.
+       The table's left edge is at (50vw - 500px).
+       The table's right edge is at (50vw + 500px).
+       We want the button div to start (50vw + 500px + 30px_gap). */
+    left: calc(50vw + 500px + 30px); /* 50vw + (table_max_width / 2) + gap */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 180px; /* Ensure a consistent width for buttons */
+    z-index: 1000; /* Ensure it stays on top of other content */
+    background-color: #f9fafb;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Rest of your existing CSS (ensure these are present and correctly defined): */
+
+/* Headline */
 .table-heading {
-  margin: 0 auto;
-  width: 100%;
-  text-align: center;
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 18px;
 }
 
+/* Table */
 .car-table {
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-  table-layout: fixed; /* Ensures that the table cells are distributed evenly */
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+.email-cell {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
 }
 
 .car-table th,
 .car-table td {
-  padding: 12px 16px;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-.car-table thead {
-  background-color: #f5f5f5;
-}
-
-.car-table tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
-.car-table tr:hover {
-  background-color: #f0f8ff;
+    padding: 10px 12px;
+    background-color: white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .car-table th {
-  color: #333;
-  font-weight: 600;
-  border-bottom: 2px solid #ddd;
+    background-color: #e8f0fe;
+    font-weight: 600;
+    color: #1976d2;
+    border-radius: 8px 8px 0 0;
 }
 
-/* Make the toggle column narrower */
-.car-table th:first-child,
-.car-table td:first-child {
-  width: 50px; /* Adjust to your preference */
-  text-align: center;
+.car-table td {
+    border-bottom: 1px solid #eee;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
-/* Button Styles */
+/* Action Buttons in Row */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Buttons */
 .add-btn,
 .delete-btn,
-.todays-add-btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
-
-.settings-btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  position: relative;
-  margin-bottom: 10px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-  gap: 10px; /* Space between buttons */
-  padding-left: 10px; /* Adds space from the left */
-}
-
-.todays-add-btn {
-  margin-top: 10px;
-}
-
-.pagination {
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Align Edit and Delete buttons properly */
-.car-table td .button-container {
-  display: flex;
-  justify-content: flex-start; /* Align buttons to the left */
-  gap: 10px; /* Adds space between buttons */
-}
-
-.car-table td .edit-btn,
-.car-table td .delete-btn {
-  padding: 5px 10px;
-  font-size: 0.9rem;
-  background-color: #28a745; /* Edit button green */
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.car-table td .delete-btn {
-  background-color: #dc3545; /* Delete button red */
-}
-
-/* Optional: Add hover effect for buttons */
-.car-table td .edit-btn:hover {
-  background-color: #218838;
-}
-
-.car-table td .delete-btn:hover {
-  background-color: #c82333;
-}
-
-/* Adjust column widths for better spacing */
-.car-table th:nth-child(1),
-.car-table td:nth-child(1) {
-  width: 50px; /* Narrow checkbox column */
-}
-
-.car-table th:nth-child(2),
-.car-table td:nth-child(2) {
-  width: 150px; /* Plate column */
-}
-
-.car-table th:nth-child(3),
-.car-table td:nth-child(3) {
-  width: 80px; /* Age column */
-}
-
-.car-table th:nth-child(4),
-.car-table td:nth-child(4) {
-  width: 120px; /* Type column */
-}
-
-.car-table th:nth-child(5),
-.car-table td:nth-child(5) {
-  width: 150px; /* Last Inspection column */
-}
-
-.car-table th:nth-child(6),
-.car-table td:nth-child(6) {
-  width: 150px; /* Next Inspection column */
-}
-
-.car-table th:nth-child(7),
-.car-table td:nth-child(7) {
-  width: 150px; /* Owner Name column */
-}
-
-.car-table th:nth-child(8),
-.car-table td:nth-child(8) {
-  width: 120px; /* Phone column */
-}
-
-.car-table th:nth-child(9),
-.car-table td:nth-child(9) {
-  width: 180px; /* Email column */
-}
-
-/* Adjust Actions column width */
-.car-table th:nth-child(10),
-.car-table td:nth-child(10) {
-  width: 120px; /* Actions column width */
-}
-/* Adjust button container width */
-.car-table td .button-container {
-  display: flex;
-  justify-content: space-between; /* Space out the buttons */
-  gap: 10px;
-  padding-left: 10px;
-  width: 100%; /* Ensure it takes full width of the cell */
-}
-@media (max-width: 768px) {
-  .car-table {
-    width: 100%; /* Make table take full width on smaller screens */
-  }
-
-  .car-table th, .car-table td {
-    padding: 8px; /* Reduce padding for smaller screens */
-  }
-
-  .car-table td .button-container {
-    gap: 5px; /* Reduce gap between buttons */
-  }
-
-  /* Optionally, stack the columns on small screens */
-  .car-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .car-table th {
-    display: none; /* Hide headers */
-  }
-  /* Example of further improvement in CSS */
 .todays-add-btn,
-.settings-btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.settings-btn,
+.edit-btn {
+    background-color: #1976d2;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-.settings-btn {
-  background-color: #28a745; /* Change color to differentiate buttons */
-}
-
+.add-btn:hover,
+.delete-btn:hover,
 .todays-add-btn:hover,
-.settings-btn:hover {
-  opacity: 0.8;
+.settings-btn:hover,
+.edit-btn:hover {
+    background-color: #145ea8;
 }
 
+.delete-btn {
+    background-color: #e53935;
+}
+
+.delete-btn:hover {
+    background-color: #c62828;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    font-size: 0.9rem;
+}
+
+.pagination button {
+    background-color: #e8f0fe;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #1976d2;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #d0e3ff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Search Bar */
+.search-bar-container { /* Added this flex centering for the search bar */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    width: 100%;
+    max-width: 350px;
+    padding: 8px 12px;
+    border: 1px solid #144e86;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    outline: none;
+    background-color: #0d2a54;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(13, 42, 84, 0.5);
+}
+
+.search-bar::placeholder {
+    color: #506692;
+    font-family: Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif;
+}
+
+.search-bar:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.5);
+    background-color: #144e86;
+    color: white;
 }

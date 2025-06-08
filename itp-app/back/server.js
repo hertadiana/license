@@ -1,17 +1,14 @@
 // Example using Express.js
 
 require('dotenv').config();
+const cron=require('node-cron');
+const nodemailer=require('nodemailer');
 const express = require('express');
 const app = express();
 const cors = require('cors');
 app.use(cors());
 const bodyParser = require('body-parser');
 const { Sequelize, Model, DataTypes, Op } = require('sequelize');
-const client = require('twilio')(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello, Express.js Server!</h1>');
@@ -107,6 +104,9 @@ app.get('/cars/today', async (_, res) => {
 
 
 /////////////////////////////////
+
+
+
 app.get('/cars', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -194,4 +194,129 @@ app.get('/cars/:id', async (req, res) => {
 const port = process.env.PORT || 3000; // You can use environment variables for port configuration
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+
+//////////////////////////////////////////
+
+
+
+
+// Setup nodemailer (example with Gmail SMTP, replace with your config)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+// Function to send email
+async function sendEmail(to, subject, plate, dueDate) {
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <h2 style="color: #2d89ef;">Vehicle Inspection Reminder</h2>
+      <p>Dear Customer,</p>
+      <p>This is a friendly reminder that your car with license plate <strong>${plate}</strong> is due for inspection on <strong>${dueDate}</strong>.</p>
+      <p>Please ensure your vehicle is ready by then to avoid any penalties or issues.</p>
+      <p>Thank you,<br>Your ITP Station</p>
+      <hr>
+      <small style="color: gray;">This is an automated message. Please do not reply.</small>
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: `"ITP Reminder" <${process.env.EMAIL_USERNAME}>`,
+      to,
+      subject,
+      html: htmlContent,
+    });
+    console.log(`Pretty email sent to ${to}`);
+  } catch (err) {
+    console.error(`Error sending email to ${to}:`, err);
+  }
+}
+
+// Reminder job
+cron.schedule('0 9 * * *', async () => {  // Every day at 09:00 am server time
+  try {
+    const today = new Date();
+    const todayISO = today.toISOString().split('T')[0];
+
+    // Dates 7 days and 1 day from today
+    const date7 = new Date(today);
+    date7.setDate(date7.getDate() + 7);
+    const date1 = new Date(today);
+    date1.setDate(date1.getDate() + 1);
+
+    const date7ISO = date7.toISOString().split('T')[0];
+    const date1ISO = date1.toISOString().split('T')[0];
+
+    // Find cars with 'next' inspection date in 7 or 1 day
+    const carsToNotify = await Car.findAll({
+      where: {
+        next: {
+          [Sequelize.Op.in]: [date7ISO, date1ISO],
+        },
+      },
+    });
+
+    for (const car of carsToNotify) {
+      if (car.email) {
+await sendEmail(car.email, 'Inspection Reminder', car.plate, car.next);
+      }
+    }
+  } catch (err) {
+    console.error('Error in reminder cron job:', err);
+  }
+});
+
+app.get('/test-email', async (req, res) => {
+  try {
+    await sendEmail(
+      req.query.to || 'your_email@example.com',
+      'Test Email from Node.js',
+      'This is a test email sent from your Express server.'
+    );
+    res.send('Test email sent successfully.');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Failed to send test email.');
+  }
+});
+
+app.get('/trigger-reminders', async (req, res) => {
+  try {
+    const today = new Date();
+    const date7 = new Date(today);
+    date7.setDate(today.getDate() + 7);
+    const date1 = new Date(today);
+    date1.setDate(today.getDate() + 1);
+
+    const date7ISO = date7.toISOString().split('T')[0];
+    const date1ISO = date1.toISOString().split('T')[0];
+
+    const carsToNotify = await Car.findAll({
+      where: {
+        next: {
+          [Sequelize.Op.in]: [date7ISO, date1ISO],
+        },
+      },
+    });
+
+    for (const car of carsToNotify) {
+      const messageBody = `Reminder: Your car with plate ${car.plate} has an inspection due on ${car.next}.`;
+
+     
+      if (car.email) {
+        await sendEmail(car.email, 'Inspection Reminder', car.plate, car.next);
+      }
+    }
+
+    res.send('Reminders triggered manually.');
+  } catch (err) {
+    console.error('Error in test reminder trigger:', err);
+    res.status(500).send('Error triggering reminders.');
+  }
 });
