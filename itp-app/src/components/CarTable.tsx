@@ -90,7 +90,7 @@ const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <> {/* Using a React Fragment because we have two top-level elements */}
-      {showTodays && <TodaysAdd cars={cars} onClose={() => setShowTodays(false)} />}
+   
 
       {/* This div wraps only the table and will be centered on the page */}
       <div className="page-content-wrapper">
@@ -192,14 +192,24 @@ const [searchQuery, setSearchQuery] = useState('');
         </div>
       </div> {/* End of page-content-wrapper */}
 
+
+
       {/* Button Group - This div is fixed and positioned independently */}
       <div className="button-group-container">
-        <button onClick={() => setShowTodays(true)} className="todays-add-btn">
-          Today's Add
-        </button>
+    
+         <button onClick={() => setShowTodays(true)} className="todays-add-btn">
+        Today's Add
+      </button>
+
+      {showTodays && (
+        <TodaysAdd onClose={() => setShowTodays(false)} />
+      )}
+        
+        
         <button className="settings-btn" onClick={() => navigate('/settings')}>
           Settings
         </button>
+
         <button className="add-btn" onClick={() => setIsAddFormOpen(true)}>Add Car</button>
       {isAddFormOpen && (
   <AddForm
