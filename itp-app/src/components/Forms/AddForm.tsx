@@ -4,7 +4,8 @@ import {
   isPositiveNumber,
   isValidEmail
 } from '../utils/validation';
-import './AddForm.css'; // Import the CSS file
+import "./Forms.css";
+
 interface AddFormProps {
   onClose: () => void;
   onAddCar: (newCar: any) => void;
@@ -126,100 +127,121 @@ useEffect(() => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Add New Car</h2>
+        <h2 className="table-heading">Add New Car</h2> {/* Reusing table-heading */}
 
         <div className="form-scroll-container">
           <form onSubmit={handleSubmit}>
-          <label>Plate:
-  <input
-    type="text"
-    value={plate}
-    onChange={(e) => setPlate(e.target.value.toUpperCase())}
-    pattern="^[A-Z]{1,2}\s\d{2,3}\s[A-Z]{1,2}$"
-    title="Format: AB 123 CD"
-    required
-  />
-</label>
+            <div className="input-group">
+              <input
+                type="text"
+                value={plate}
+                onChange={(e) => setPlate(e.target.value.toUpperCase())}
+                pattern="^[A-Z]{1,2}\s\d{2,3}\s[A-Z]{1,2}$"
+                title="Format: AB 123 CD"
+                required
+                placeholder=" "
+                id="add-plate"
+              />
+              <label htmlFor="add-plate">Plate</label>
+            </div>
 
-<label>Age:
-  <input
-    type="number"
-    min="1"
-    value={age}
-    onChange={(e) => setAge(e.target.value)}
-    required
-  />
-</label>
+            <div className="input-group">
+              <input
+                type="number"
+                min="1"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                required
+                placeholder=" "
+                id="add-age"
+              />
+              <label htmlFor="add-age">Age</label>
+            </div>
 
-<label>Owner Name:
-  <input
-    type="text"
-    value={name}
-    onChange={(e) => setName(e.target.value)}
-    pattern="^[a-zA-Z\s]+$"
-    title="Only letters and spaces allowed"
-    required
-  />
-</label>
-<label>Phone:
-  <input
-    type="tel"
-    value={phone}
-    onChange={(e) => setPhone(e.target.value)}
-    pattern="\d{10}"
-    title="Enter a valid phone number (10 digits)"
-    required
-  />
-</label>
+            <div className="input-group">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                pattern="^[a-zA-Z\s]+$"
+                title="Only letters and spaces allowed"
+                required
+                placeholder=" "
+                id="add-owner-name"
+              />
+              <label htmlFor="add-owner-name">Owner Name</label>
+            </div>
 
-<label>Car Type:
-  <select value={type} onChange={(e) => setType(e.target.value)} required>
-    <option value="">Select type</option>
-    <option value="autoturism">Autoturism</option>
-    <option value="utilitarUsor">Utilitar Ușor</option>
-    <option value="utilitarGreu">Utilitar Greu</option>
-    <option value="transportPersoane">Transport Persoane</option>
-    <option value="motociclete">Motocicletă</option>
-    <option value="remorcaUsoara">Remorcă Ușoară</option>
-    <option value="remorcaGrea">Remorcă Grea</option>
-    <option value="taxi">Taxi</option>
-  </select>
-</label>
+            <div className="input-group">
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                pattern="\d{10}"
+                title="Enter a valid phone number (10 digits)"
+                required
+                placeholder=" "
+                id="add-phone"
+              />
+              <label htmlFor="add-phone">Phone</label>
+            </div>
 
-<label>Last Inspection Date:
-  <input
-    type="date"
-    value={last}
-    onChange={(e) => setLast(e.target.value)}
-    required
-  />
-</label>
+            <div className="input-group">
+              <select value={type} onChange={(e) => setType(e.target.value)} required id="add-car-type">
+                <option value="">Select type</option>
+                <option value="autoturism">Autoturism</option>
+                <option value="utilitarUsor">Utilitar Ușor</option>
+                <option value="utilitarGreu">Utilitar Greu</option>
+                <option value="transportPersoane">Transport Persoane</option>
+                <option value="motociclete">Motocicletă</option>
+                <option value="remorcaUsoara">Remorcă Ușoară</option>
+                <option value="remorcaGrea">Remorcă Grea</option>
+                <option value="taxi">Taxi</option>
+              </select>
+            </div>
 
-<label>Next Inspection Date:
-  <input
-    type="date"
-    value={next}
-    readOnly
-  />
-</label>
+            <div className="input-group">
+              <input
+                type="date"
+                value={last}
+                onChange={(e) => setLast(e.target.value)}
+                required
+                placeholder=" "
+                id="add-last-inspection"
+              />
+              <label htmlFor="add-last-inspection">Last Inspection Date</label>
+            </div>
 
-<label>Email:
-  <input
-    type="email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
-    title="Email must be in format example@domain.com"
-    required
-  />
-</label>
+            <div className="input-group">
+              <input
+                type="date"
+                value={next}
+                readOnly
+                placeholder=" "
+                id="add-next-inspection"
+              />
+              <label htmlFor="add-next-inspection">Next Inspection Date</label>
+            </div>
 
+            <div className="input-group">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
+                title="Email must be in format example@domain.com"
+                required
+                placeholder=" "
+                id="add-email"
+              />
+              <label htmlFor="add-email">Email</label>
+            </div>
           </form>
         </div>
 
         <div className="modal-footer">
-          <button type="button" onClick={onClose} className="close-btn">Close</button>
-          <button type="submit" onClick={handleSubmit}>Add Car</button>
+          <button type="button" onClick={onClose} className="add-btn">Close</button> {/* Used cancel-btn */}
+          <button type="submit" onClick={handleSubmit} className="delete-btn">Add Car</button> {/* Used add-btn */}
         </div>
       </div>
     </div>

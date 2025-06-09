@@ -1,5 +1,6 @@
 import { useEffect, useState, } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Forms.css";
 export default function Settings() {
   const defaultIntervals = {
     autoturism: { under3: 3, between3and12: 2, over12: 1 },
@@ -35,29 +36,73 @@ export default function Settings() {
   };
 
   return (
-    <div>
-      <h2>Setări Intervale ITP</h2>
-      <div>
-        <h3>Autoturisme</h3>
-        <label>Sub 3 ani: 
-          <input type="number" value={intervals.autoturism.under3} onChange={e =>
-            setIntervals({...intervals, autoturism: {...intervals.autoturism, under3: parseFloat(e.target.value)}})} />
-        </label>
-        <label>3-12 ani: 
-          <input type="number" value={intervals.autoturism.between3and12} onChange={e =>
-            setIntervals({...intervals, autoturism: {...intervals.autoturism, between3and12: parseFloat(e.target.value)}})} />
-        </label>
-        <label>Peste 12 ani: 
-          <input type="number" value={intervals.autoturism.over12} onChange={e =>
-            setIntervals({...intervals, autoturism: {...intervals.autoturism, over12: parseFloat(e.target.value)}})} />
-        </label>
+    <div className="page-content-wrapper">
+      <div className="car-table-container"> {/* Reusing container for consistent styling */}
+        <h2 className="table-heading">Setări Intervale ITP</h2> {/* Using table-heading for consistency */}
+        <div className="settings-section">
+          <h3>Autoturisme</h3>
+          <label className="input-group">
+            <input
+              type="number"
+              value={intervals.autoturism.under3}
+              onChange={e =>
+                setIntervals({
+                  ...intervals,
+                  autoturism: { ...intervals.autoturism, under3: parseFloat(e.target.value) }
+                })}
+              placeholder=" " // For floating label effect if you add CSS for it
+            />
+            <span className="label">Sub 3 ani (ani)</span>
+          </label>
+          <label className="input-group">
+            <input
+              type="number"
+              value={intervals.autoturism.between3and12}
+              onChange={e =>
+                setIntervals({
+                  ...intervals,
+                  autoturism: { ...intervals.autoturism, between3and12: parseFloat(e.target.value) }
+                })}
+              placeholder=" "
+            />
+            <span className="label">3-12 ani (ani)</span>
+          </label>
+          <label className="input-group">
+            <input
+              type="number"
+              value={intervals.autoturism.over12}
+              onChange={e =>
+                setIntervals({
+                  ...intervals,
+                  autoturism: { ...intervals.autoturism, over12: parseFloat(e.target.value) }
+                })}
+              placeholder=" "
+            />
+            <span className="label">Peste 12 ani (ani)</span>
+          </label>
+        </div>
+
+        {/* You can add similar blocks for other car types here, following the same structure */}
+        {/* For example:
+        <div className="settings-section">
+          <h3>Utilitare Ușoare</h3>
+          <label className="input-group">
+            <input
+              type="number"
+              value={intervals.utilitarUsor}
+              onChange={e => setIntervals({...intervals, utilitarUsor: parseFloat(e.target.value)})}
+              placeholder=" "
+            />
+            <span className="label">Interval (ani)</span>
+          </label>
+        </div>
+        */}
+
+        <div className="form-actions"> {/* Reusing form-actions for button grouping */}
+          <button onClick={handleSave} className="add-btn">Salvează</button> {/* Reusing button styles */}
+          <button type="button" onClick={() => navigate('/')} className="cancel-btn">Anulează</button> {/* Added a cancel-btn class */}
+        </div>
       </div>
-
-      {/* Add similar blocks for other types if you want them editable */}
-
-      <button onClick={handleSave}>Salvează</button>
-      <button type="button" onClick={() => navigate('/')}>Cancel</button>
-
     </div>
   );
 }

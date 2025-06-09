@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Car } from '../Car';
 import { isNonEmpty, isPositiveNumber, isValidEmail } from '../utils/validation';
+import "./Forms.css";
 
 const EditForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,9 +67,10 @@ const EditForm: React.FC = () => {
   if (!car) return <div>Loading...</div>;
 
   return (
-    <div className="edit-form-container">
-      <h2>Edit Car</h2>
-      <form onSubmit={handleSubmit}>
+   <div className="page-content-wrapper"> {/* Wrap in page-content-wrapper */}
+      <div className="car-table-container"> {/* Wrap in car-table-container */}
+        <h2 className="table-heading">Edit Car</h2> {/* Reusing table-heading */}
+        <form onSubmit={handleSubmit}>
         {['plate', 'age', 'type', 'last', 'next', 'name', 'phone', 'email'].map((field) => (
           <div key={field} className="input-group">
             <input
@@ -100,11 +102,12 @@ const EditForm: React.FC = () => {
         ))}
         
         <div className="form-actions">
-          <button type="submit" className="save-btn">Save</button>
-          <button type="button" onClick={() => navigate('/')} className="cancel-btn">Cancel</button>
+          <button type="submit" className="add-btn">Save</button>
+          <button type="button" className="add-btn" onClick={() => navigate('/')}>Cancel</button>
         </div>
       </form>
     </div>
+  </div>
   );
 };
 

@@ -7,7 +7,7 @@ html, body, #root {
     height: 100%;
     font-family: 'Segoe UI', sans-serif;
     overflow-x: hidden;
-
+    
     /* Remove or comment out this line */
     /* background-color: #4583c5; */
 
@@ -44,6 +44,7 @@ html, body, #root {
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     flex-shrink: 0; /* Prevent it from shrinking too much */
+    margin-left:100px;
 }
 
 /* Button Group (Fixed position, adjusted for centering with the table) */
@@ -76,6 +77,19 @@ html, body, #root {
 
 /* Rest of your existing CSS (ensure these are present and correctly defined): */
 
+.car-table td:nth-child(5),
+.car-table th:nth-child(5) {
+  background-color: #e0f7fa; /* Light cyan, change as needed */
+  color: #00796b; /* Optional: darker text for contrast */
+  font-weight: bold; /* Optional: make it stand out more */
+}
+
+.car-table td:nth-child(2),
+.car-table th:nth-child(2) {
+  background-color: #e0ebfa; /* Light cyan, change as needed */
+  color: #003b79; /* Optional: darker text for contrast */
+  font-weight: bold; /* Optional: make it stand out more */
+}
 /* Headline */
 .table-heading {
     text-align: center;

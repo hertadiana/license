@@ -1,0 +1,188 @@
+/* AddForm.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.modal-content {
+    background-color: #f9fafb; /* Light background for the modal */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px; /* Max width for readability */
+    max-height: 90vh; /* Limit height to viewport height */
+    overflow-y: auto; /* Enable scrolling if content is too tall */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-scroll-container {
+    flex-grow: 1; /* Allows it to take available space */
+    overflow-y: auto; /* Enables scrolling for the form fields if they exceed height */
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form fields */
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Separator line */
+}
+
+/* Reusing existing button styles from CarTable.css */
+/* .add-btn, .cancel-btn (defined in CarTable.css) */
+/* CarTable.css - Add these styles to the end or in an appropriate section */
+
+/* Input Group for Floating Labels */
+.input-group {
+    position: relative;
+    margin-bottom: 20px; /* Space between input groups */
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: white;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+}
+
+/* Styles for the floating label */
+.input-group label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1rem;
+    pointer-events: none; /* Make label unclickable */
+    transition: all 0.2s ease-out;
+    background-color: transparent;
+    padding: 0 4px; /* Padding for background color when lifted */
+    z-index: 1; /* Ensure label is above input when not focused */
+}
+
+/* Adjust label when input is focused or has a value */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group select:focus + label,
+.input-group select.filled + label /* For select with a value */ {
+    top: 0;
+    font-size: 0.8rem;
+    color: #1976d2;
+    transform: translateY(-50%);
+    background-color: #f9fafb; /* Match modal/container background */
+    z-index: 2; /* Bring label to front */
+}
+
+/* Specific styling for select label since :placeholder-shown doesn't apply */
+.input-group select {
+    -webkit-appearance: none; /* Remove default arrow on WebKit */
+    -moz-appearance: none;    /* Remove default arrow on Firefox */
+    appearance: none;         /* Remove default arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 35px; /* Make space for the custom arrow */
+}
+
+
+/* Form Actions for buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Specific button styles for forms (if different from global) */
+.save-btn {
+    background-color: #28a745; /* Green color for save */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn {
+    background-color: #6c757d; /* Grey for cancel/close */
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Settings Page Specifics */
+.settings-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.settings-section h3 {
+    color: #1976d2;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.settings-section label {
+    display: block;
+    margin-bottom: 15px;
+}
